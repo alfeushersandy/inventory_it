@@ -10,7 +10,14 @@
                     </div>
                     <div class="modal-body">
                         <div class="form-group row">
-                            <label for="nama_kategori" id="label_nama_aset" class="col-lg-2 col-lg-offset-2 control-label">Nama Kategori</label>
+                            <label for="kode_kategori" id="label_nama_aset" class="col-lg-3 col-lg-offset-3 control-label">Kode Kategori</label>
+                            <div class="col-lg-6">
+                                <input type="text" name="kode_kategori" id="kode_kategori" class="form-control" maxlength="2" required autofocus>
+                                <span class="help-block with-errors"></span>
+                            </div>
+                        </div>
+                        <div class="form-group row mt-2">
+                            <label for="nama_kategori" id="label_nama_aset" class="col-lg-3 col-lg-offset-3 control-label">Nama Kategori</label>
                             <div class="col-lg-6">
                                 <input type="text" name="nama_kategori" id="nama_kategori" class="form-control" required autofocus>
                                 <span class="help-block with-errors"></span>

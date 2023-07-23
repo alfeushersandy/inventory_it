@@ -22,9 +22,16 @@
                             </div>
                         </div>
                         <div class="form-group row mt-3">
+                            <label for="kode_barang" class="col-lg-2 col-lg-offset-2 control-label">Kode Barang</label>
+                            <div class="col-lg-6">
+                                <input type="text" class="form-control" name="kode_barang" id="kode_barang" readonly> 
+                                <span class="help-block with-errors"></span>
+                            </div>
+                        </div>
+                        <div class="form-group row mt-3">
                             <label for="kode_barang_lama" class="col-lg-2 col-lg-offset-2 control-label">Kode Barang Lama</label>
                             <div class="col-lg-6">
-                                <input type="text" class="form-control" name="kode_barang_lama" id="kode_barang_lama">
+                                <input type="text" class="form-control" name="kode_barang_lama" id="kode_barang_lama" autofocus>
                                 <span class="help-block with-errors"></span>
                             </div>
                         </div>
@@ -70,6 +77,18 @@
                                 <span class="help-block with-errors"></span>
                             </div>
                         </div>
+                        <div class="form-group row mt-3">
+                            <label for="status" id="label_nama_aset" class="col-lg-2 col-lg-offset-2 control-label">Status</label>
+                            <div class="col-lg-6">
+                                <select class="form-select" aria-label="Default select example" name="status" id="status">
+                                    <option selected>Pilih status</option>
+                                    <option value="Tersedia">Tersedia</option>
+                                    <option value="Digunakan">Digunakan</option>
+                                    <option value="Rusak">Rusak</option>
+                                </select>
+                                <span class="help-block with-errors"></span>
+                            </div>
+                        </div>
                         <div class="form-it" style="display: none;">
                             <div class="form-group row mt-3">
                                 <label for="user" class="col-lg-2 col-lg-offset-2 control-label">Mainboard</label>
@@ -89,6 +108,20 @@
                                 <label for="user" class="col-lg-2 col-lg-offset-2 control-label">Memori</label>
                                 <div class="col-lg-6">
                                     <input type="number" class="form-control" name="memori" id="memori">
+                                    <span class="help-block with-errors"></span>
+                                </div>
+                            </div>
+                            <div class="form-group row mt-3">
+                                <label for="hardisk" class="col-lg-2 col-lg-offset-2 control-label">Hardisk</label>
+                                <div class="col-lg-6">
+                                    <input type="text" class="form-control" name="hardisk" id="hardisk">
+                                    <span class="help-block with-errors"></span>
+                                </div>
+                            </div>
+                            <div class="form-group row mt-3">
+                                <label for="hardisk" class="col-lg-2 col-lg-offset-2 control-label">SSD</label>
+                                <div class="col-lg-6">
+                                    <input type="text" class="form-control" name="ssd" id="ssd">
                                     <span class="help-block with-errors"></span>
                                 </div>
                             </div>
@@ -125,7 +158,7 @@
                                 <div class="col-lg-6">
                                     <select class="form-select" aria-label="Default select example" name="keyboard" id="keyboard">
                                     <option value="1" selected>Ada</option>
-                                    <option value="1">Tidak Ada</option>
+                                    <option value="0">Tidak Ada</option>
                                     </select>
                                     <span class="help-block with-errors"></span>
                                 </div>
@@ -135,7 +168,7 @@
                                 <div class="col-lg-6">
                                     <select class="form-select" aria-label="Default select example" name="mouse" id="mouse">
                                     <option value="1" selected>Ada</option>
-                                    <option value="1">Tidak Ada</option>
+                                    <option value="0">Tidak Ada</option>
                                     </select>
                                     <span class="help-block with-errors"></span>
                                 </div>

@@ -13,10 +13,14 @@ class Masterbarang extends Model
     protected $guarded = ['id_barang'];
 
     public function lokasi(){
-        return $this->hasMany(Lokasi::class, 'id_lokasi', 'lokasi_id');
+        return $this->hasOne(Lokasi::class, 'id_lokasi', 'lokasi_id');
     }
 
     public function kategori(){
         return $this->hasMany(Kategori::class, 'id_kategori', 'kategori_id');
+    }
+
+    public function barang(){
+        return $this->hasMany(Serah_terima_detail::class, 'barang_id', 'id_barang');
     }
 }

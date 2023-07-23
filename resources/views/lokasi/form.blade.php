@@ -19,38 +19,10 @@
                         <div class="form-group row mt-3">
                             <label for="nama_lokasi" id="label_nama_aset" class="col-lg-2 col-lg-offset-2 control-label">Pilih Departemen</label>
                             <div class="col">
-                                <input type="checkbox" name="departemen[]" id="departemen[]" value="HRD & GA">
-                                <label for="departemen[]">HRD & GA</label>
-                                <input type="checkbox" name="departemen[]" id="departemen[]" value="Keuangan">
-                                <label for="departemen[]">Keuangan</label>
-                                <input type="checkbox" name="departemen[]" id="departemen[]" value="Akuntansi">
-                                <label for="departemen[]">Akuntansi</label>
-                                <input type="checkbox" name="departemen[]" id="departemen[]" value="Bidding">
-                                <label for="departemen[]">Bidding</label>
-                                <input type="checkbox" name="departemen[]" id="departemen[]" value="PPIC">
-                                <label for="departemen[]">PPIC</label>
-                                <br>
-                                <input type="checkbox" name="departemen[]" id="departemen[]" value="Procurement">
-                                <label for="departemen[]">Procurement</label>
-                                <input type="checkbox" name="departemen[]" id="departemen[]" value="IT">
-                                <label for="departemen[]">IT</label>
-                                <input type="checkbox" name="departemen[]" id="departemen[]" value="Legal">
-                                <label for="departemen[]">Legal</label>
-                                <input type="checkbox" name="departemen[]" id="departemen[]" value="Proyek">
-                                <label for="departemen[]">Proyek</label>
-                                <input type="checkbox" name="departemen[]" id="departemen[]" value="AMP">
-                                <label for="departemen[]">AMP</label>
-                                <input type="checkbox" name="departemen[]" id="departemen[]" value="SCP">
-                                <label for="departemen[]">SCP</label>
-                                <br>
-                                <input type="checkbox" name="departemen[]" id="departemen[]" value="PCP">
-                                <label for="departemen[]">PCP</label>
-                                <input type="checkbox" name="departemen[]" id="departemen[]" value="CMP">
-                                <label for="departemen[]">CMP</label>
-                                <input type="checkbox" name="departemen[]" id="departemen[]" value="Kendaraan & Peralatan">
-                                <label for="departemen[]">Kendaraan & Peralatan</label>
-                                <input type="checkbox" name="departemen[]" id="departemen[]" value="Tambang">
-                                <label for="departemen[]">Tambang</label>
+                                @foreach ($dept as $item)
+                                    <input type="checkbox" name="departemen[]" id="departemen[]" value="{{$item->nama_departemen}}">
+                                    <label for="departemen[]">{{$item->nama_departemen}}</label>
+                                @endforeach
                             </div>
                         </div>
                     </div>

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Departemen;
 use App\Models\Lokasi;
 use Illuminate\Http\Request;
 
@@ -14,7 +15,10 @@ class LokasiController extends Controller
      */
     public function index()
     {
-        return view('lokasi.index');
+        $dept = Departemen::all();
+        return view('lokasi.index', 
+            ['dept' => $dept]
+        );
     }
 
     public function data(){
@@ -79,7 +83,9 @@ class LokasiController extends Controller
      */
     public function edit($id)
     {
-        //
+        $lokasi = Lokasi::find($id);
+
+        return response()->json($lokasi);
     }
 
     /**

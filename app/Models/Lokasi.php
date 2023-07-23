@@ -12,7 +12,20 @@ class Lokasi extends Model
     protected $primaryKey = 'id_lokasi';
     protected $fillable = ['nama_lokasi'];
 
-    public function barang(){
-        return $this->hasMany(Masterbarang::class, 'id_lokasi', 'lokasi_id');
+    public function master_barang(){
+        return $this->hasMany(Masterbarang::class, 'lokasi_id', 'id_lokasi');
+    }
+
+    public function serah_terima(){
+        return $this->hasMany(Serah_terima::class, 'lokasi_id', 'id_lokasi');
+    }
+
+    public function serah_terima_detail(){
+        return $this->hasMany(Serah_terima_detail::class, 'lokasi_awal_id', 'id_lokasi');
+    }
+
+    public function departemen()
+    {
+        return $this->hasOne(Departemen::class, 'id_dept', 'departemen');
     }
 }

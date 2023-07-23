@@ -20,8 +20,9 @@
                     <table class="table table-striped table-bordered" style="text-align: center;">
                         <thead class="thead-dark">
                             <th>No</th>
+                            <th>Kode Kategori</th>
                             <th>Nama Kategori</th>
-                            {{-- <th width="15%"><i class="fa fa-cog"></i></th> --}}
+                            <th width="15%"><i class="fa fa-cog"></i></th>
                         </thead>
                     </table>
                 </div>
@@ -46,7 +47,9 @@ $(function () {
         },
         columns: [
             {data: 'DT_RowIndex', searchable: false, sortable: false},
+            {data: 'kode_kategori'},
             {data: 'nama_kategori'},
+            {data: 'aksi'},
         ]
     });
 
@@ -62,6 +65,42 @@ $(function () {
         $('#modal-form form')[0].reset();
         $('#modal-form form').attr('action', url);
         $('#modal-form [name=_method]').val('post');
+    }
+
+    function editForm(url) {
+        $('#modal-form').modal('show');
+        $('#modal-form .modal-title').text('Edit Barang');
+
+        $('#modal-form form')[0].reset();
+        $('#modal-form [name=_method]').val('put');
+
+        $.get(url)
+            .done((response) => {
+                $('#modal-form form').attr('action', 'kategori/'+response.id_kategori);
+                $('#kode_kategori').val(response.kode_kategori)
+                $('#nama_kategori').val(response.nama_kategori)
+            }) 
+            .fail((errors) => {
+                alert('Tidak dapat menampilkan data');
+                return;
+            });
+
+    }
+
+    function deleteData(url) {
+        if (confirm('Yakin ingin menghapus data terpilih?')) {
+            $.post(url, {
+                    '_token': $('[name=csrf-token]').attr('content'),
+                    '_method': 'delete'
+                })
+                .done((response) => {
+                    table.ajax.reload();
+                })
+                .fail((errors) => {
+                    alert('Tidak dapat menghapus data');
+                    return;
+                });
+        }
     }
 </script>
 @endpush
