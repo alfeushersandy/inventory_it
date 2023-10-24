@@ -15,7 +15,7 @@ class LokasiController extends Controller
      */
     public function index()
     {
-        $dept = Departemen::all();
+        $dept = Lokasi::all();
         return view('lokasi.index', 
             ['dept' => $dept]
         );
