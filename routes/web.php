@@ -27,15 +27,16 @@ Route::get('/', [DashboardController::class, 'index'])->middleware(['auth', 'ver
 
 
 
-require __DIR__.'/auth.php';
+require __DIR__ . '/auth.php';
 
-Route::middleware(['auth', 'verified'])->group(function() {
+Route::middleware(['auth', 'verified'])->group(function () {
     //dashboard
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard.index');
+    Route::get('/dashboard/new', [\App\Http\Controllers\Apps\DashboardController::class, 'index']);
     //kategori
     Route::resource('kategori', KategoriController::class);
     Route::get('/data/kategori', [KategoriController::class, 'data'])->name('kategori.data');
-    
+
     //lokasi
     Route::resource('lokasi', LokasiController::class)
         ->except('edit');
@@ -45,12 +46,12 @@ Route::middleware(['auth', 'verified'])->group(function() {
     //departemen
     Route::resource('departemen', DepartemenController::class);
     Route::get('data/departemen', [DepartemenController::class, 'data'])->name('departemen.data');
-    
+
     //master_barang
     Route::resource('barang', MasterbarangController::class)
         ->except('show', 'destroy');
-    Route::get('/getlokasi/{lokasi}',[MasterbarangController::class, 'getDept'])->name('barang.lokasi');
-    Route::get('/getkode/{kategori}',[MasterbarangController::class, 'getkode'])->name('barang.kode');
+    Route::get('/getlokasi/{lokasi}', [MasterbarangController::class, 'getDept'])->name('barang.lokasi');
+    Route::get('/getkode/{kategori}', [MasterbarangController::class, 'getkode'])->name('barang.kode');
     Route::get('/data/barang', [MasterbarangController::class, 'data'])->name('barang.data');
     Route::get('/barang/kembali/{barang}', [MasterbarangController::class, 'kembali'])->name('barang.kembali');
     Route::post('/barang/generate', [MasterbarangController::class, 'generateQr'])->name('barang.generate');
@@ -61,13 +62,13 @@ Route::middleware(['auth', 'verified'])->group(function() {
     Route::resource('serah', SerahterimaController::class)
         ->except('update');
     Route::post('detail/update', [SerahterimaController::class, 'update'])->name('serah.update');
-    Route::get('/getlokasi/{lokasi}',[SerahterimaController::class, 'getDept'])->name('serah.lokasi');
+    Route::get('/getlokasi/{lokasi}', [SerahterimaController::class, 'getDept'])->name('serah.lokasi');
     Route::get('/data/serah', [SerahterimaController::class, 'data'])->name('serah.data');
-    Route::get('/selesai',[SerahterimaController::class, 'selesai'])->name('serah.selesai');
-    Route::get('/cetak',[SerahterimaController::class, 'cetak'])->name('serah.cetak');
+    Route::get('/selesai', [SerahterimaController::class, 'selesai'])->name('serah.selesai');
+    Route::get('/cetak', [SerahterimaController::class, 'cetak'])->name('serah.cetak');
     Route::get('/diambil/{serah}', [SerahterimaController::class, 'diambil'])->name('serah.diambil');
     Route::get('/serah/detail/{detail}', [SerahterimaController::class, 'detail'])->name('serah.detail');
-    
+
     //detail_barang
     Route::resource('detail', SerahterimadetailController::class)
         ->except('store', 'update');
@@ -88,6 +89,5 @@ Route::middleware(['auth', 'verified'])->group(function() {
 
     //reporting
     Route::get('/report', [ReportController::class, 'index']);
-    Route::get('/report/{lokasi}', [ReportController::class, 'getTotal']);
-    });
-
+    Route::get('/report/total', [ReportController::class, 'getTotal']);
+});

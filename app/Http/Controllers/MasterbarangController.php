@@ -22,93 +22,95 @@ class MasterbarangController extends Controller
     public function index()
     {
         $kategori = Kategori::all()->pluck('nama_kategori', 'id_kategori');
-        $lokasi = Lokasi::select('nama_lokasi')->groupBy('nama_lokasi')   
-                    ->orderBy('id_lokasi', 'asc')
-                    ->get();
+        $lokasi = Lokasi::select('nama_lokasi')->groupBy('nama_lokasi')
+            ->orderBy('id_lokasi', 'asc')
+            ->get();
         $barang = Masterbarang::with(['kategori', 'lokasi'])->get();
         return view('master_barang.index', compact('kategori', 'lokasi', 'barang'));
     }
 
-    public function getDept($lokasi){
+    public function getDept($lokasi)
+    {
         $dept = DB::table('lokasi')
-                ->leftJoin('departemen', 'departemen.id_dept', '==', 'lokasi.departemen')
-                ->where('nama_lokasi', '=', $lokasi)
-                ->select('nama_departemen')
-                ->get();
+            ->leftJoin('departemen', 'departemen.id_dept', '==', 'lokasi.departemen')
+            ->where('nama_lokasi', '=', $lokasi)
+            ->select('nama_departemen')
+            ->get();
         dd($dept);
     }
 
-    public function getKode($kategori){
+    public function getKode($kategori)
+    {
         $kategori_final = Kategori::where('id_kategori', $kategori)->latest()->first();
         $barang = Masterbarang::where('kategori_id', $kategori)->latest()->first();
         $tahun = date('Y');
         $sub_tahun = substr($tahun, 2);
 
-        if($barang){
+        if ($barang) {
             $kode_barang = $barang->kode_barang;
             $exp_kode_barang = explode('/', $kode_barang);
-                if($sub_tahun == $exp_kode_barang[1]){
-                    $kode_barang_akhir1 = substr($exp_kode_barang[0], 3);
-                    $kode_barang_final = (int) $kode_barang_akhir1 + 1 ;
-                    $kode_barang_db = $kategori_final->kode_kategori . '-' . tambah_nol_didepan($kode_barang_final,3) . '/' . $exp_kode_barang[1];
-                }else{
-                    $kode_barang_db =  $kategori_final->kode_kategori . '-' . '001' . '/' . $sub_tahun;
-                }
-        }else{
+            if ($sub_tahun == $exp_kode_barang[1]) {
+                $kode_barang_akhir1 = substr($exp_kode_barang[0], 3);
+                $kode_barang_final = (int) $kode_barang_akhir1 + 1;
+                $kode_barang_db = $kategori_final->kode_kategori . '-' . tambah_nol_didepan($kode_barang_final, 3) . '/' . $exp_kode_barang[1];
+            } else {
+                $kode_barang_db =  $kategori_final->kode_kategori . '-' . '001' . '/' . $sub_tahun;
+            }
+        } else {
             $kode_barang_db =  $kategori_final->kode_kategori . '-' . '001' . '/' . $sub_tahun;
         }
 
         return response()->json($kode_barang_db);
     }
 
-    public function data(){
+    public function data()
+    {
         $barang = Masterbarang::leftjoin('kategori', 'kategori.id_kategori', '=', 'master_barang.kategori_id')
-                ->leftjoin('lokasi', 'lokasi.id_lokasi', '=', 'master_barang.lokasi_id')
-                ->orderBy('id_barang', 'desc')        
-                ->get();
+            ->leftjoin('lokasi', 'lokasi.id_lokasi', '=', 'master_barang.lokasi_id')
+            ->orderBy('id_barang', 'desc')
+            ->get();
 
         return datatables()
             ->of($barang)
             ->addIndexColumn()
-            ->addcolumn('kategori', function($barang){
+            ->addcolumn('kategori', function ($barang) {
                 return $barang->nama_kategori;
             })
-            ->addcolumn('lokasi', function($barang){
+            ->addcolumn('lokasi', function ($barang) {
                 return $barang->nama_lokasi;
             })
-            ->addcolumn('departemen', function($barang){
+            ->addcolumn('departemen', function ($barang) {
                 return $barang->departemen;
             })
-            ->addcolumn('keyboard', function($barang){
-                if($barang->keyboard == true){
+            ->addcolumn('keyboard', function ($barang) {
+                if ($barang->keyboard == true) {
                     return 'Ada';
-                }else{
+                } else {
                     return 'Tidak ada';
                 }
             })
-            ->addcolumn('mouse', function($barang){
-                if($barang->mouse == true){
+            ->addcolumn('mouse', function ($barang) {
+                if ($barang->mouse == true) {
                     return 'Ada';
-                }else{
+                } else {
                     return 'Tidak ada';
                 }
             })
-            ->addcolumn('select_all', function($barang){
+            ->addcolumn('select_all', function ($barang) {
                 return '
-                    <input type="checkbox" name="id_barang[]" value="'. $barang->id_barang .'">
+                    <input type="checkbox" name="id_barang[]" value="' . $barang->id_barang . '">
                 ';
             })
             ->addColumn('aksi', function ($barang) {
                 return '
                 <div class="btn-group">
-                    <button type="button" onclick="editForm(`'. route('barang.edit', $barang->id_barang) .'`)" class="btn btn-xs btn-info btn-flat"><i class="bi bi-pencil-square"></i></button>
-                    <button type="button" onclick="deleteData(`'. route('barang.destroy', $barang->id_barang) .'`)" class="btn btn-xs btn-danger btn-flat"><i class="bi bi-trash3-fill"></i></button>
+                    <button type="button" onclick="editForm(`' . route('barang.edit', $barang->id_barang) . '`)" class="btn btn-xs btn-info btn-flat"><i class="bi bi-pencil-square"></i></button>
+                    <button type="button" onclick="deleteData(`' . route('barang.destroy', $barang->id_barang) . '`)" class="btn btn-xs btn-danger btn-flat"><i class="bi bi-trash3-fill"></i></button>
                 </div>
                 ';
             })
-            ->rawColumns(['select_all','kategori', 'lokasi', 'departemen', 'aksi'])
+            ->rawColumns(['select_all', 'kategori', 'lokasi', 'departemen', 'aksi'])
             ->make(true);
-
     }
 
     /**
@@ -135,17 +137,17 @@ class MasterbarangController extends Controller
         $tahun = date('Y');
         $sub_tahun = substr($tahun, 2);
 
-        if($barang){
+        if ($barang) {
             $kode_barang = $barang->kode_barang;
             $exp_kode_barang = explode('/', $kode_barang);
-                if($sub_tahun == $exp_kode_barang[1]){
-                    $kode_barang_akhir1 = substr($exp_kode_barang[0], 3);
-                    $kode_barang_final = (int) $kode_barang_akhir1 + 1 ;
-                    $kode_barang_db = $kategori_final->kode_kategori . '-' . tambah_nol_didepan($kode_barang_final,3) . '/' . $exp_kode_barang[1];
-                }else{
-                    $kode_barang_db =  $kategori_final->kode_kategori . '-' . '001' . '/' . $sub_tahun;
-                }
-        }else{
+            if ($sub_tahun == $exp_kode_barang[1]) {
+                $kode_barang_akhir1 = substr($exp_kode_barang[0], 3);
+                $kode_barang_final = (int) $kode_barang_akhir1 + 1;
+                $kode_barang_db = $kategori_final->kode_kategori . '-' . tambah_nol_didepan($kode_barang_final, 3) . '/' . $exp_kode_barang[1];
+            } else {
+                $kode_barang_db =  $kategori_final->kode_kategori . '-' . '001' . '/' . $sub_tahun;
+            }
+        } else {
             $kode_barang_db =  $kategori_final->kode_kategori . '-' . '001' . '/' . $sub_tahun;
         }
 
@@ -168,16 +170,16 @@ class MasterbarangController extends Controller
         $master_barang->mouse = $request->mouse;
         $master_barang->os = $request->os;
         $master_barang->status = $request->status;
-        
+
         $cek_barang = Masterbarang::where('kode_barang', $request->kode_barang)->latest()->first();
-        if($cek_barang){
+        if ($cek_barang) {
             $master_barang->kode_barang = $kode_barang_db;
             $master_barang->save();
 
             alert()->success('Success', 'Kode Barang Sudah Digunakan, Kode Barang Anda Menjadi ' . $kode_barang_db);
 
-            return redirect()->route('barang.index'); 
-        }else{
+            return redirect()->route('barang.index');
+        } else {
             $master_barang->kode_barang = $request->kode_barang;
             $master_barang->save();
 
@@ -228,54 +230,54 @@ class MasterbarangController extends Controller
      */
     public function update(Request $request, Masterbarang $barang)
     {
-        if($barang->user){
-        $barang->kode_barang_lama = $request->kode_barang_lama;
-        $barang->kategori_id = $request->kategori_id;
-        $barang->merek = $request->merek;
-        $barang->tipe = $request->tipe;
-        $barang->mainboard = $request->mainboard;
-        $barang->prosesor = $request->prosesor;
-        $barang->memori = $request->memori . 'GB';
-        $barang->hardisk = $request->hardisk;
-        $barang->ssd = $request->ssd;
-        $barang->vga = $request->vga;
-        $barang->sound = $request->sound;
-        $barang->network = $request->network;
-        $barang->keyboard = $request->keyboard;
-        $barang->mouse = $request->mouse;
-        $barang->os = $request->os;
-        if($request->lokasi_id == 7 && $request->user == null){
-            $barang->status = "Tersedia";
-        }else{
-            $barang->status = "Digunakan";
-        }
-        $barang->kode_barang = $request->kode_barang;
-        $barang->update();
-        }else{
-        $barang->kode_barang_lama = $request->kode_barang_lama;
-        $barang->kategori_id = $request->kategori_id;
-        $barang->merek = $request->merek;
-        $barang->tipe = $request->tipe;
-        $barang->lokasi_id = $request->lokasi_id;
-        $barang->user = $request->user;
-        $barang->mainboard = $request->mainboard;
-        $barang->prosesor = $request->prosesor;
-        $barang->memori = $request->memori . 'GB';
-        $barang->hardisk = $request->hardisk;
-        $barang->ssd = $request->ssd;
-        $barang->vga = $request->vga;
-        $barang->sound = $request->sound;
-        $barang->network = $request->network;
-        $barang->keyboard = $request->keyboard;
-        $barang->mouse = $request->mouse;
-        $barang->os = $request->os;
-        if($request->lokasi_id == 7 && $request->user == null){
-            $barang->status = "Tersedia";
-        }else{
-            $barang->status = "Digunakan";
-        }
-        $barang->kode_barang = $request->kode_barang;
-        $barang->update();
+        if ($barang->user) {
+            $barang->kode_barang_lama = $request->kode_barang_lama;
+            $barang->kategori_id = $request->kategori_id;
+            $barang->merek = $request->merek;
+            $barang->tipe = $request->tipe;
+            $barang->mainboard = $request->mainboard;
+            $barang->prosesor = $request->prosesor;
+            $barang->memori = $request->memori . 'GB';
+            $barang->hardisk = $request->hardisk;
+            $barang->ssd = $request->ssd;
+            $barang->vga = $request->vga;
+            $barang->sound = $request->sound;
+            $barang->network = $request->network;
+            $barang->keyboard = $request->keyboard;
+            $barang->mouse = $request->mouse;
+            $barang->os = $request->os;
+            if ($request->lokasi_id == 7 && $request->user == null) {
+                $barang->status = "Tersedia";
+            } else {
+                $barang->status = $request->status;
+            }
+            $barang->kode_barang = $request->kode_barang;
+            $barang->update();
+        } else {
+            $barang->kode_barang_lama = $request->kode_barang_lama;
+            $barang->kategori_id = $request->kategori_id;
+            $barang->merek = $request->merek;
+            $barang->tipe = $request->tipe;
+            $barang->lokasi_id = $request->lokasi_id;
+            $barang->user = $request->user;
+            $barang->mainboard = $request->mainboard;
+            $barang->prosesor = $request->prosesor;
+            $barang->memori = $request->memori . 'GB';
+            $barang->hardisk = $request->hardisk;
+            $barang->ssd = $request->ssd;
+            $barang->vga = $request->vga;
+            $barang->sound = $request->sound;
+            $barang->network = $request->network;
+            $barang->keyboard = $request->keyboard;
+            $barang->mouse = $request->mouse;
+            $barang->os = $request->os;
+            if ($request->lokasi_id == 7 && $request->user == null) {
+                $barang->status = "Tersedia";
+            } else {
+                $barang->status = $request->status;
+            }
+            $barang->kode_barang = $request->kode_barang;
+            $barang->update();
         }
         // $barang->kode_barang_lama = $request->kode_barang_lama;
         // $barang->kategori_id = $request->kategori_id;
@@ -304,8 +306,7 @@ class MasterbarangController extends Controller
 
         alert()->success('Success', 'Edit data berhasil');
 
-        return redirect()->route('barang.index'); 
-        
+        return redirect()->route('barang.index');
     }
 
     /**
@@ -323,7 +324,8 @@ class MasterbarangController extends Controller
         return response(null, 204);
     }
 
-    public function generateQr(Request $request){
+    public function generateQr(Request $request)
+    {
         $databarang = array();
         foreach ($request->id_barang as $id) {
             $barang = Masterbarang::find($id);
@@ -332,10 +334,9 @@ class MasterbarangController extends Controller
         }
 
         $no  = 1;
-        $pdf = PDF::setOptions(['isHtml5ParserEnabled'=>true,'isRemoteEnabled'=>true])
-        ->loadView('master_barang.qrcode', compact('databarang', 'no'));
+        $pdf = PDF::setOptions(['isHtml5ParserEnabled' => true, 'isRemoteEnabled' => true])
+            ->loadView('master_barang.qrcode', compact('databarang', 'no'));
         $pdf->setPaper('a4', 'potrait');
         return $pdf->stream('barang.pdf');
-
     }
 }
