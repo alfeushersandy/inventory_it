@@ -88,6 +88,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::post('/selesai/{maintenance}', [MaintenanceController::class, 'selesai'])->name('maintenance.selesai');
 
     //reporting
-    Route::get('/report', [ReportController::class, 'index']);
+    Route::get('/report', [ReportController::class, 'index'])->name('report.index');;
     Route::get('/report/total', [ReportController::class, 'getTotal']);
+    Route::get('/report/data/{lokasi}/{kategori}', [ReportController::class, 'data']);
 });

@@ -23,7 +23,7 @@
                     <div class="col-md-4">
                         <label for="">Kategori</label>
                         <select class="form-select kategori" aria-label="Default select example" name="kategori">
-                            <option value="All Kategori" selected>All Kategori</option>
+                            <option value="All Kategori" selected>Pilih Kategori</option>
                             @foreach ($kategori as $item)
                                 <option value="{{ $item->id_kategori }}">{{ $item->nama_kategori }}</option>
                             @endforeach
@@ -45,9 +45,8 @@
                 <div class="box-body table-responsive mt-2">
                     <form action="" method="post" class="form-barang">
                         @csrf
-                        <table class="table table-striped table-bordered" style="text-align: center;">
+                        <table class="table table-striped table-bordered table-barang" style="text-align: center;">
                             <thead class="thead-dark">
-                                <th>No</th>
                                 <th>Kode Barang</th>
                                 <th>Kode Barang lama</th>
                                 <th>Kategori</th>
@@ -70,6 +69,7 @@
 @endsection
 @push('scripts')
     <script>
+        let table;
         $(function() {
             $('.lokasi').on('change', function() {
                 lokasi = $(this).val();
@@ -84,6 +84,43 @@
                 getTotal(lokasi, kategori)
                 console.log([lokasi, kategori])
             })
+
+            table = $('.table-barang').DataTable({
+                order: [1, 'DESC'],
+                responsive: true,
+                processing: true,
+                serverSide: false,
+                autoWidth: false,
+                data: [],
+                columns: [{
+                        data: 'kode_barang'
+                    },
+                    {
+                        data: 'kode_barang_lama'
+                    },
+                    {
+                        data: 'kategori'
+                    },
+                    {
+                        data: 'merek'
+                    },
+                    {
+                        data: 'tipe'
+                    },
+                    {
+                        data: 'lokasi'
+                    },
+                    {
+                        data: 'departemen'
+                    },
+                    {
+                        data: 'user'
+                    },
+                    {
+                        data: 'status'
+                    },
+                ],
+            });
         })
 
         function getTotal(lokasi, kategori) {
@@ -98,6 +135,8 @@
                 dataType: "json",
                 success: function(data) {
                     $('.statistics-value').html(data);
+                    table.ajax.url("report/data/" + lokasi + "/" + kategori),
+                        table.ajax.reload();
                 }
             })
         }

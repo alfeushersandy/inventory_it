@@ -42,12 +42,22 @@ class ReportController extends Controller
         return response()->json($barang);
     }
 
-    public function data()
+    public function data($lokasi, $kategori)
     {
-        $barang = Masterbarang::leftjoin('kategori', 'kategori.id_kategori', '=', 'master_barang.kategori_id')
-            ->leftjoin('lokasi', 'lokasi.id_lokasi', '=', 'master_barang.lokasi_id')
-            ->orderBy('id_barang', 'desc')
-            ->get();
+
+        $query = Masterbarang::query();
+
+        // Filter berdasarkan kategori jika kategori tidak kosong
+        if ($kategori) {
+            $query->where('kategori_id', $kategori);
+
+            // Jika kategori tidak kosong, tambahkan filter berdasarkan lokasi untuk kategori tersebut
+            if ($lokasi && $lokasi !== "All Lokasi") {
+                $query->where('lokasi_id', $lokasi)->where('kategori_id', $kategori);
+            }
+        }
+
+        $barang = $query->get();
 
         return datatables()
             ->of($barang)
@@ -75,12 +85,7 @@ class ReportController extends Controller
                     return 'Tidak ada';
                 }
             })
-            ->addcolumn('select_all', function ($barang) {
-                return '
-                    <input type="checkbox" name="id_barang[]" value="' . $barang->id_barang . '">
-                ';
-            })
-            ->rawColumns(['select_all', 'kategori', 'lokasi', 'departemen'])
+            ->rawColumns(['kategori', 'lokasi', 'departemen'])
             ->make(true);
     }
 }
