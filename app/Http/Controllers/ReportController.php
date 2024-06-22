@@ -47,6 +47,10 @@ class ReportController extends Controller
 
         $query = Masterbarang::query();
 
+        // Left join dengan tabel lokasi dan kategori
+        $query->leftjoin('kategori', 'kategori.id_kategori', '=', 'master_barang.kategori_id')
+            ->leftjoin('lokasi', 'lokasi.id_lokasi', '=', 'master_barang.lokasi_id');
+
         // Filter berdasarkan kategori jika kategori tidak kosong
         if ($kategori) {
             $query->where('kategori_id', $kategori);
